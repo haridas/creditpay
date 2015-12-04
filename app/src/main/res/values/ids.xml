@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="card_name" type="id">card_name</item>
+    <item name="card_number" type="id">card_number</item>
+</resources>
