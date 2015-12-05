@@ -1,6 +1,8 @@
 package in.haridas.creditpay.activity;
 
 import android.app.ListActivity;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
@@ -18,6 +20,8 @@ import in.haridas.creditpay.store.LocalDbOpenHelper;
 
 public class NewCardForm extends AppCompatActivity {
 
+    LocalDbOpenHelper localDbOpenHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,19 +29,38 @@ public class NewCardForm extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        localDbOpenHelper = new LocalDbOpenHelper(this);
+
         // Add button listener.
         Button addNewCardButton = (Button)findViewById(R.id.add_new_card);
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                EditText cardName = (EditText)findViewById(R.id.card_name);
-                EditText cardNumber = (EditText)findViewById(R.id.card_number);
-                EditText billDate = (EditText)findViewById(R.id.billing_date);
+                String cardName = ((EditText)findViewById(R.id.card_name)).getText().toString();
+                String cardNumber = ((EditText)findViewById(R.id.card_number)).getText().toString();
+                String billDate = ((EditText)findViewById(R.id.billing_date)).getText().toString();
 
-                String msg = cardName.getText() + " : " + cardNumber.getText() + " : " + billDate.getText();
-                Snackbar.make(view, "Added new card ->" + msg, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String msg = cardName + " : " + cardNumber + " : " + billDate;
+
+                // Add the record into database.
+
+                if (cardNumber.length() == 16 && billDate.length() == 2) {
+                    ContentValues values = new ContentValues();
+                    values.put(LocalDbOpenHelper.CARD_NAME, cardName);
+                    values.put(LocalDbOpenHelper.CARD_NUMBER, cardNumber);
+                    values.put(LocalDbOpenHelper.BILL_DATE, billDate);
+
+                    localDbOpenHelper.getWritableDatabase().insert(LocalDbOpenHelper.TABLE_NAME,
+                            null, values);
+
+                    Snackbar.make(view, "Added new card ->" + msg, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    startActivity(new Intent(NewCardForm.this, MainActivity.class));
+                } else {
+                    Snackbar.make(view, "Wrong input, please check it", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
     }
