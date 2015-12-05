@@ -2,4 +2,5 @@
 <resources>
     <item name="card_name" type="id">card_name</item>
     <item name="card_number" type="id">card_number</item>
+    <item name="_id" type="id">_id</item>
 </resources>
