@@ -34,7 +34,7 @@ public class CardSelector {
     public void setScore(Card card, Date referenceDate) {
         Calendar currentDate = GregorianCalendar.getInstance();
         currentDate.setTimeInMillis(referenceDate.getTime());
-        int currentDay = currentDate.get(currentDate.DAY_OF_MONTH);
+        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
 
         // This date is generated based on current time.
         Calendar cardBillDate = GregorianCalendar.getInstance();
@@ -47,9 +47,9 @@ public class CardSelector {
             // score = (nextStatementDate - currentDate; in abs(days) ) + gracePeriod.
             // Get the next statementDate, from the card details and currentDate.
             Calendar nextStatementDate = GregorianCalendar.getInstance();
-            nextStatementDate.set(currentDate.YEAR, currentDate.get(currentDate.YEAR));
-            nextStatementDate.set(currentDate.MONTH, currentDate.get(currentDate.MONTH) + 1);
-            nextStatementDate.set(currentDate.DATE, card.getStatementDay());
+            nextStatementDate.setTimeInMillis(referenceDate.getTime());
+            nextStatementDate.set(Calendar.MONTH, currentDate.get(Calendar.MONTH) + 1);
+            nextStatementDate.set(Calendar.DATE, card.getStatementDay());
             score = getDaydiff(nextStatementDate, currentDate) + card.getGracePeriod();
         } else if (currentDay < card.getStatementDay()){
             score = card.getStatementDay() - currentDay + card.getGracePeriod();
@@ -62,8 +62,10 @@ public class CardSelector {
         card.setScore(score);
     }
 
-    public static int getDaydiff(Calendar now, Calendar cardBillDate) {
-        int diff = now.get(Calendar.DAY_OF_YEAR) - cardBillDate.get(Calendar.DAY_OF_YEAR);
+    public static int getDaydiff(Calendar date1, Calendar date2) {
+        int mode1 = ((GregorianCalendar)date1).isLeapYear(date1.get(Calendar.YEAR)) ? 366 : 365;
+        int mode2 = ((GregorianCalendar)date2).isLeapYear(date2.get(Calendar.YEAR)) ? 366 : 365;
+        int diff = (date1.get(Calendar.DAY_OF_YEAR) % mode1) - (date2.get(Calendar.DAY_OF_YEAR) % mode2 );
         return Math.abs(diff);
     }
 

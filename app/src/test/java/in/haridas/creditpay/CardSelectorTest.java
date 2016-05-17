@@ -64,5 +64,13 @@ public class CardSelectorTest {
         assertEquals(41, hdfcCard.getScore(), 0);
         assertEquals(43, sbiCard.getScore(), 0);
 
+
+        // current date on Dec 31'st, check year corssing.
+        reference = new GregorianCalendar(2016, 11, 31);
+        selector.setCardScores(reference.getTime());
+        assertEquals(41, cityCard.getScore(), 0);
+        assertEquals(25, hdfcCard.getScore(), 0);
+        assertEquals(27, sbiCard.getScore(), 0);
+
     }
 }
