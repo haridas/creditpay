@@ -1,9 +1,9 @@
 package in.haridas.creditpay.activity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -12,29 +12,47 @@ import java.util.List;
 public class CardSelector {
 
     List<Card> cards = null;
+
+    public CardSelector() {
+        cards = new ArrayList<>();
+    }
     public CardSelector(List<Card> cardDates) {
         this.cards = cards;
     }
 
-    private void setScore(Card card) {
-        Date now = new Date();
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(now.getTime());
-        int dayOfMonth = calendar.get(calendar.MONTH);
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
+    /**
+     * Set the card score based on the given referenceDate.
+     *
+     *
+     * @param card Instance of Card.
+     * @param referenceDate Reference date, eg; TODAY.
+     */
+    public void setScore(Card card, Date referenceDate) {
+        Calendar currentDate = GregorianCalendar.getInstance();
+        currentDate.setTimeInMillis(referenceDate.getTime());
+        int currentDay = currentDate.get(currentDate.DAY_OF_MONTH);
 
         // This date is generated based on current time.
         Calendar cardBillDate = GregorianCalendar.getInstance();
         float score = 0;
 
 
-        if (dayOfMonth > card.getBillingDate()) {
-            // This means, next billing cycle will be on next month.
-            cardBillDate.set(calendar.YEAR, calendar.get(calendar.YEAR));
-            cardBillDate.set(calendar.MONTH, calendar.get(calendar.MONTH) + 1);
-            cardBillDate.set(calendar.DATE, card.getBillingDate() + card.getGracePeriod());
-            score = getDaydiff(calendar, cardBillDate);
-        } else if (dayOfMonth < card.getBillingDate()){
-            score = card.getBillingDate() - dayOfMonth;
+        if (currentDay > card.getStatementDay()) {
+
+            // Use bellow equation
+            // score = (nextStatementDate - currentDate; in abs(days) ) + gracePeriod.
+            // Get the next statementDate, from the card details and currentDate.
+            Calendar nextStatementDate = GregorianCalendar.getInstance();
+            nextStatementDate.set(currentDate.YEAR, currentDate.get(currentDate.YEAR));
+            nextStatementDate.set(currentDate.MONTH, currentDate.get(currentDate.MONTH) + 1);
+            nextStatementDate.set(currentDate.DATE, card.getStatementDay());
+            score = getDaydiff(nextStatementDate, currentDate) + card.getGracePeriod();
+        } else if (currentDay < card.getStatementDay()){
+            score = card.getStatementDay() - currentDay + card.getGracePeriod();
         } else {
             // Today is the billing date, so this card will get least score.
             score = 0;
@@ -50,13 +68,12 @@ public class CardSelector {
     }
 
     /**
-     * Set the card score.
+     * Set the score for all cards, based on the given reference date.
      *
-     * @param cards
      */
-    private void setCardScores(List<Card> cards) {
+    public void setCardScores(Date referenceDate) {
         for(Card card : cards) {
-            setScore(card);
+            setScore(card, referenceDate);
         }
     }
 

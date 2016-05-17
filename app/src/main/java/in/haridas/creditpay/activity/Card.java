@@ -7,7 +7,7 @@ public class Card {
     /**
      * Billing date between 1-28.
      */
-    int billingDate = 0;
+    int statementDay = 0;
     int gracePeriod = 0;
     String name = null;
 
@@ -21,18 +21,18 @@ public class Card {
     public Card() {
     }
 
-    public Card(String name, int billingDate, int gracePeriod) {
+    public Card(String name, int statementDay, int gracePeriod) {
         this.name = name;
-        this.billingDate = billingDate;
+        this.statementDay = statementDay;
         this.gracePeriod = gracePeriod;
     }
 
-    public int getBillingDate() {
-        return billingDate;
+    public int getStatementDay() {
+        return statementDay;
     }
 
-    public void setBillingDate(int billingDate) {
-        this.billingDate = billingDate;
+    public void setStatementDay(int statementDay) {
+        this.statementDay = statementDay;
     }
 
     public int getGracePeriod() {
