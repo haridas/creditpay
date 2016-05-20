@@ -4,6 +4,7 @@
     <string name="title_activity_new_card_form">NewCardForm</string>
     <string name="card_name_hint">Card Name</string>
     <string name="card_number_hint">Card Number</string>
-    <string name="billing_date_hint">Billing Date in DD (05)</string>
+    <string name="billing_date_hint">05\'th (DD format)</string>
+    <string name="grace_period_hint">20 Days</string>
     <string name="add_new_card">Add New Card</string>
 </resources>

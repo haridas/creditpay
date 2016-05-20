@@ -33,18 +33,18 @@ public class NewCardForm extends AppCompatActivity {
             public void onClick(View view) {
 
                 String cardName = ((EditText)findViewById(R.id.card_name)).getText().toString();
-                String cardNumber = ((EditText)findViewById(R.id.card_number)).getText().toString();
-                String billDate = ((EditText)findViewById(R.id.billing_date)).getText().toString();
+                String billingDay = ((EditText)findViewById(R.id.billing_day)).getText().toString();
+                String gracePeriod = ((EditText)findViewById(R.id.grace_period)).getText().toString();
 
-                String msg = cardName + " : " + cardNumber + " : " + billDate;
+                String msg = cardName + " : " + billingDay + " : " + gracePeriod;
 
                 // Add the record into database.
 
-                if (cardNumber.length() == 16 && billDate.length() == 2) {
+                if (cardName.length() > 0 && billingDay.length() > 0) {
                     ContentValues values = new ContentValues();
                     values.put(LocalDbOpenHelper.CARD_NAME, cardName);
-                    values.put(LocalDbOpenHelper.CARD_NUMBER, cardNumber);
-                    values.put(LocalDbOpenHelper.BILL_DATE, billDate);
+                    values.put(LocalDbOpenHelper.BILLING_DAY, billingDay);
+                    values.put(LocalDbOpenHelper.GRACE_PERIOD, gracePeriod);
 
                     localDbOpenHelper.getWritableDatabase().insert(LocalDbOpenHelper.TABLE_NAME,
                             null, values);

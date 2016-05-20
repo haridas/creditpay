@@ -34,7 +34,7 @@ public class MainActivity extends ListActivity {
         Cursor cursor = readCards();
         dbCursorAdaptor = new SimpleCursorAdapter(this, R.layout.list_layout,
                 cursor, LocalDbOpenHelper.columns,
-                new int[] {R.id._id, R.id.card_name, R.id.card_number, R.id.billing_date});
+                new int[] {R.id._id, R.id.card_name, R.id.billing_day, R.id.grace_period});
 
         setListAdapter(dbCursorAdaptor);
 

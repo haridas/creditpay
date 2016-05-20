@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import in.haridas.creditpay.activity.Card;
@@ -24,16 +23,16 @@ public class CardSelectorTest {
         // On same month
         now.set(2016, 1, 23);
         next.set(2016, 1, 28);
-        Assert.assertEquals(5, CardSelector.getDaydiff(now, next));
+        Assert.assertEquals(5, CardSelector.getDiffByDay(now, next));
 
         now.set(2016, 0, 20);
         next.set(2016, 1, 29);
-        Assert.assertEquals(40, CardSelector.getDaydiff(now, next));
+        Assert.assertEquals(40, CardSelector.getDiffByDay(now, next));
 
         // With different time.
         now.set(2016, 0, 20, 23, 22, 33);
         next.set(2016, 1, 29, 23, 59, 59);
-        Assert.assertEquals(40, CardSelector.getDaydiff(now, next));
+        Assert.assertEquals(40, CardSelector.getDiffByDay(now, next));
     }
 
     @Test
@@ -71,6 +70,12 @@ public class CardSelectorTest {
         assertEquals(41, cityCard.getScore(), 0);
         assertEquals(25, hdfcCard.getScore(), 0);
         assertEquals(27, sbiCard.getScore(), 0);
+
+        reference = new GregorianCalendar(2016, 6, 7);
+        selector.setCardScores(reference.getTime());
+        assertEquals(34, cityCard.getScore(), 0);
+        assertEquals(49, hdfcCard.getScore(), 0);
+        assertEquals(0, sbiCard.getScore(), 0);
 
     }
 }

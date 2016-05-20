@@ -50,7 +50,7 @@ public class CardSelector {
             nextStatementDate.setTimeInMillis(referenceDate.getTime());
             nextStatementDate.set(Calendar.MONTH, currentDate.get(Calendar.MONTH) + 1);
             nextStatementDate.set(Calendar.DATE, card.getStatementDay());
-            score = getDaydiff(nextStatementDate, currentDate) + card.getGracePeriod();
+            score = getDiffByDay(nextStatementDate, currentDate) + card.getGracePeriod();
         } else if (currentDay < card.getStatementDay()){
             score = card.getStatementDay() - currentDay + card.getGracePeriod();
         } else {
@@ -62,7 +62,7 @@ public class CardSelector {
         card.setScore(score);
     }
 
-    public static int getDaydiff(Calendar date1, Calendar date2) {
+    public static int getDiffByDay(Calendar date1, Calendar date2) {
         int mode1 = ((GregorianCalendar)date1).isLeapYear(date1.get(Calendar.YEAR)) ? 366 : 365;
         int mode2 = ((GregorianCalendar)date2).isLeapYear(date2.get(Calendar.YEAR)) ? 366 : 365;
         int diff = (date1.get(Calendar.DAY_OF_YEAR) % mode1) - (date2.get(Calendar.DAY_OF_YEAR) % mode2 );
