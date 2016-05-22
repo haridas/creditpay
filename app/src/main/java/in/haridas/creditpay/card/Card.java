@@ -1,4 +1,4 @@
-package in.haridas.creditpay.activity;
+package in.haridas.creditpay.card;
 
 /**
  * Created by haridas on 8/4/16.

@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import in.haridas.creditpay.activity.Card;
-import in.haridas.creditpay.activity.CardSelector;
+import in.haridas.creditpay.card.Card;
+import in.haridas.creditpay.card.CardSelector;
 import static org.junit.Assert.*;
 
 /**

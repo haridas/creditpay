@@ -1,24 +1,21 @@
 package in.haridas.creditpay.activity;
 
 import android.app.ListActivity;
+import android.app.LoaderManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import in.haridas.creditpay.R;
-import in.haridas.creditpay.store.LocalDbOpenHelper;
+import in.haridas.creditpay.database.CardTable;
 
 public class MainActivity extends ListActivity {
-
-    private LocalDbOpenHelper localDbOpenHelper;
-    private SimpleCursorAdapter dbCursorAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +25,14 @@ public class MainActivity extends ListActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        localDbOpenHelper = new LocalDbOpenHelper(this);
+        CardTable CardTable = new CardTable(this);
+        LoaderManager loaderManager = getLoaderManager();
 
-
-        Cursor cursor = readCards();
-        dbCursorAdaptor = new SimpleCursorAdapter(this, R.layout.list_layout,
-                cursor, LocalDbOpenHelper.columns,
+        CursorAdapter dbCursorAdaptor = new SimpleCursorAdapter(this, R.layout.list_layout,
+                CardTable.getCards(), CardTable.columns,
                 new int[] {R.id._id, R.id.card_name, R.id.billing_day, R.id.grace_period});
+
+        getListView().setDividerHeight(2);
 
         setListAdapter(dbCursorAdaptor);
 
@@ -70,8 +68,5 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Cursor readCards() {
-        return localDbOpenHelper.getReadableDatabase().query(LocalDbOpenHelper.TABLE_NAME,
-                LocalDbOpenHelper.columns, null, new String[]{}, null, null, null);
-    }
+
 }

@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import in.haridas.creditpay.R;
-import in.haridas.creditpay.store.LocalDbOpenHelper;
+import in.haridas.creditpay.database.CardTable;
 
 public class NewCardForm extends AppCompatActivity {
 
-    LocalDbOpenHelper localDbOpenHelper;
+    CardTable CardTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +24,12 @@ public class NewCardForm extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        localDbOpenHelper = new LocalDbOpenHelper(this);
+        CardTable = new CardTable(this);
 
         // Add button listener.
         Button addNewCardButton = (Button)findViewById(R.id.add_new_card);
+
+
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,11 +44,11 @@ public class NewCardForm extends AppCompatActivity {
 
                 if (cardName.length() > 0 && billingDay.length() > 0) {
                     ContentValues values = new ContentValues();
-                    values.put(LocalDbOpenHelper.CARD_NAME, cardName);
-                    values.put(LocalDbOpenHelper.BILLING_DAY, billingDay);
-                    values.put(LocalDbOpenHelper.GRACE_PERIOD, gracePeriod);
+                    values.put(CardTable.CARD_NAME, cardName);
+                    values.put(CardTable.BILLING_DAY, billingDay);
+                    values.put(CardTable.GRACE_PERIOD, gracePeriod);
 
-                    localDbOpenHelper.getWritableDatabase().insert(LocalDbOpenHelper.TABLE_NAME,
+                    CardTable.getWritableDatabase().insert(CardTable.TABLE_NAME,
                             null, values);
 
                     Snackbar.make(view, "Added new card ->" + msg, Snackbar.LENGTH_LONG)
