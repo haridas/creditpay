@@ -3,7 +3,7 @@ package in.haridas.creditpay.card;
 /**
  * Created by haridas on 8/4/16.
  */
-public class Card {
+public class Card implements Comparable {
 
     /**
      * Id of the card, we won't consider the default value of the id.
@@ -81,5 +81,15 @@ public class Card {
      */
     public Object[] getDbRow() {
         return  new Object[] {_id, name, statementDay, gracePeriod, getScore()};
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        if(((Card)another).getScore() > this.getScore()) {
+            return 1;
+        } else {
+            return -1;
+        }
+//        return (int)(((Card)another).getScore() - this.getScore());
     }
 }
