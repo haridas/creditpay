@@ -1,17 +1,22 @@
 package in.haridas.creditpay.card;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import in.haridas.creditpay.database.CardTable;
+
 /**
  * Created by haridas on 8/4/16.
  */
 public class CardSelector {
 
-    List<Card> cards = null;
+    ArrayList<Card> cards = null;
 
     public CardSelector() {
         cards = new ArrayList<>();
@@ -20,8 +25,30 @@ public class CardSelector {
         this.cards = cards;
     }
 
-    public void addCard(Card card) {
-        cards.add(card);
+    /**
+     * Initialize the CardSelector from cursor.
+     * @param cursor
+     */
+    public CardSelector(Cursor cursor) {
+        cards = new ArrayList<>();
+        populateCardListFromCursor(cursor);
+    }
+
+    private void populateCardListFromCursor(Cursor cursor) {
+        int cardLen = cursor.getCount();
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            int _id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int billDay = cursor.getInt(2);
+            int gracePeriod = cursor.getInt(3);
+
+            Card card = new Card(_id, name, billDay, gracePeriod);
+            cards.add(card);
+
+            cursor.moveToNext();
+        }
     }
 
     /**
@@ -77,6 +104,31 @@ public class CardSelector {
         for(Card card : cards) {
             setScore(card, referenceDate);
         }
+    }
+
+    public ArrayList<Card> getSortedCards() {
+        setCardScores(new Date());
+
+        // Sort the card based on score, use selection sort.
+
+        return cards;
+    }
+
+    /**
+     * Get Processed result as MatrixCursor.
+     *
+     * Will sort the cards prepare a cursor for UI elements.
+     */
+    public MatrixCursor getSortedCursor() {
+
+        ArrayList<Card> sortedCards = getSortedCards();
+        int numCards = sortedCards.size();
+        MatrixCursor cursor = new MatrixCursor(CardTable.columns, numCards);
+        for (int i=0; i < numCards; i++) {
+            Card card = sortedCards.get(i);
+            cursor.addRow(card.getDbRow());
+        }
+        return cursor;
     }
 
     /**

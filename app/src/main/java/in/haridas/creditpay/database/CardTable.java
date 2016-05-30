@@ -40,12 +40,4 @@ public class CardTable {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
-//    public Cursor getCards() {
-//        return this.getReadableDatabase().query(CardTable.TABLE_NAME,
-//                CardTable.columns, null, new String[]{}, null, null, null);
-//    }
-
-//    void deleteDb() {
-//        context.deleteDatabase(NAME);
-//    }
 }

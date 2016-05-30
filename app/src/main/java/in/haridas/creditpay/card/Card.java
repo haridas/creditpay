@@ -4,10 +4,18 @@ package in.haridas.creditpay.card;
  * Created by haridas on 8/4/16.
  */
 public class Card {
+
     /**
-     * Billing date between 1-28.
+     * Id of the card, we won't consider the default value of the id.
+     */
+    int _id = -1;
+
+    /**
+     * Statement date between 1-28.
      */
     int statementDay = 0;
+
+    // Number of days after statement days
     int gracePeriod = 0;
     String name = null;
 
@@ -22,6 +30,13 @@ public class Card {
     }
 
     public Card(String name, int statementDay, int gracePeriod) {
+        this.name = name;
+        this.statementDay = statementDay;
+        this.gracePeriod = gracePeriod;
+    }
+
+    public Card(int id, String name, int statementDay, int gracePeriod) {
+        this._id = id;
         this.name = name;
         this.statementDay = statementDay;
         this.gracePeriod = gracePeriod;
@@ -57,5 +72,15 @@ public class Card {
 
     public void setScore(float score) {
         this.score = score;
+    }
+
+    /**
+     * Helper method for Cursor, to add new card into cursor.
+     *
+     * @return String[]
+     */
+    public Object[] getDbRow() {
+        Object[] columns = {_id, name, statementDay, gracePeriod };
+        return columns;
     }
 }

@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import in.haridas.creditpay.card.CardSelector;
 import in.haridas.creditpay.database.CardDatabaseHelper;
 import in.haridas.creditpay.database.CardTable;
 
@@ -78,6 +80,10 @@ public class CardContentProvider extends ContentProvider {
         SQLiteDatabase db = database.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection,
                 selectionArgs, null, null, sortOrder);
+
+        // Sort the cursor based on its score, before passing to caller.
+        CardSelector selector = new CardSelector(cursor);
+        cursor = selector.getSortedCursor();
 
         // Notify potential event listeners.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);

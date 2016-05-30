@@ -2,7 +2,10 @@ package in.haridas.creditpay.activity;
 
 import android.app.ListActivity;
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -13,28 +16,25 @@ import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
 
 import in.haridas.creditpay.R;
+import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
 
-public class MainActivity extends ListActivity {
+/**
+ * List the Cards based on its score.
+ */
+public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private SimpleCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_main);
 //        setSupportActionBar(toolbar);
 
-        CardTable CardTable = new CardTable(this);
-        LoaderManager loaderManager = getLoaderManager();
-
-        CursorAdapter dbCursorAdaptor = new SimpleCursorAdapter(this, R.layout.list_layout,
-                CardTable.getCards(), CardTable.columns,
-                new int[] {R.id._id, R.id.card_name, R.id.billing_day, R.id.grace_period});
-
-        getListView().setDividerHeight(2);
-
-        setListAdapter(dbCursorAdaptor);
+        loadCards();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,5 +68,40 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void loadCards() {
+        String[] from = new String[]{CardTable.CARD_NAME, CardTable.BILLING_DAY, CardTable.GRACE_PERIOD};
+        int[] to = new int[]{R.id.card_name, R.id.billing_day, R.id.grace_period};
 
+        // Create adaptor with null cursor, we set the cursor from LoaderManager.
+        getLoaderManager().initLoader(0, null, this);
+        adapter = new SimpleCursorAdapter(this, R.layout.list_layout, null, from, to, 0);
+
+        setListAdapter(adapter);
+    }
+
+
+    /**
+     * Creates new loader after init.
+     * @param id
+     * @param args
+     * @return
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projections = CardTable.columns;
+        CursorLoader cursorLoader = new CursorLoader(this,
+                CardContentProvider.CONTENT_URI, projections, null, null, null);
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // We got fully usable cursor.
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
 }
