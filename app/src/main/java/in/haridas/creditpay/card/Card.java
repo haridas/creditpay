@@ -80,7 +80,6 @@ public class Card {
      * @return String[]
      */
     public Object[] getDbRow() {
-        Object[] columns = {_id, name, statementDay, gracePeriod };
-        return columns;
+        return  new Object[] {_id, name, statementDay, gracePeriod, getScore()};
     }
 }

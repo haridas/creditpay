@@ -17,6 +17,7 @@ public class CardTable {
     public static final String CARD_NAME = "card_name";
     public static final String BILLING_DAY = "billing_day";
     public static final String GRACE_PERIOD = "grace_period";
+    public static final String CARD_SCORE = "card_score";
 
     public static final String[] columns = {COLUMN_ID, CARD_NAME, BILLING_DAY, GRACE_PERIOD};
 

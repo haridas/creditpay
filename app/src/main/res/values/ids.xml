@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="_id" type="id">_id</item>
     <item name="card_name" type="id">card_name</item>
     <item name="billing_day" type="id">billing_day</item>
     <item name="grace_period" type="id">grace_period</item>
-    <item name="_id" type="id">_id</item>
+    <item name="card_score" type="id">card_score</item>
 </resources>

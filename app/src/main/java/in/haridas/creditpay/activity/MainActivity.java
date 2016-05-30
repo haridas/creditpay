@@ -69,8 +69,9 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     }
 
     private void loadCards() {
-        String[] from = new String[]{CardTable.CARD_NAME, CardTable.BILLING_DAY, CardTable.GRACE_PERIOD};
-        int[] to = new int[]{R.id.card_name, R.id.billing_day, R.id.grace_period};
+        String[] from = new String[]{CardTable.CARD_NAME, CardTable.BILLING_DAY,
+                CardTable.GRACE_PERIOD, CardTable.CARD_SCORE};
+        int[] to = new int[]{R.id.card_name, R.id.billing_day, R.id.grace_period, R.id.card_score};
 
         // Create adaptor with null cursor, we set the cursor from LoaderManager.
         getLoaderManager().initLoader(0, null, this);
