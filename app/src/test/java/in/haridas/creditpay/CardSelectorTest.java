@@ -3,8 +3,10 @@ package in.haridas.creditpay;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import in.haridas.creditpay.card.Card;
 import in.haridas.creditpay.card.CardSelector;
@@ -43,11 +45,13 @@ public class CardSelectorTest {
         Card hdfcCard = new Card("HDFC", 5, 20);
         Card sbiCard = new Card("SBI", 7, 20);
 
+        List<Card> cards = new ArrayList<>();
+        cards.add(cityCard);
+        cards.add(hdfcCard);
+        cards.add(sbiCard);
+
         // Card Selector.
-        CardSelector selector = new CardSelector();
-        selector.addCard(hdfcCard);
-        selector.addCard(cityCard);
-        selector.addCard(sbiCard);
+        CardSelector selector = new CardSelector(cards);
 
         // current date on Feb 4'th
         Calendar reference = new GregorianCalendar(2016, 1, 4);

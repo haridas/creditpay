@@ -4,14 +4,12 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Objects;
 
 import in.haridas.creditpay.database.CardTable;
 
@@ -20,7 +18,7 @@ import in.haridas.creditpay.database.CardTable;
  */
 public class CardSelector {
 
-    ArrayList<Card> cards = null;
+    List<Card> cards = null;
 
     private class CardComparator implements Comparator<Card> {
 
@@ -34,7 +32,7 @@ public class CardSelector {
         cards = new ArrayList<>();
     }
     public CardSelector(List<Card> cardDates) {
-        this.cards = cards;
+        this.cards = cardDates;
     }
 
     /**
@@ -118,7 +116,7 @@ public class CardSelector {
         }
     }
 
-    public ArrayList<Card> getSortedCards() {
+    public List<Card> getSortedCards() {
         setCardScores(new Date());
 
         // Sort the card based on score, use selection sort.
@@ -135,7 +133,7 @@ public class CardSelector {
      */
     public MatrixCursor getSortedCursor() {
 
-        ArrayList<Card> sortedCards = getSortedCards();
+        List<Card> sortedCards = getSortedCards();
         int numCards = sortedCards.size();
         String[] columns = new String[]{CardTable.COLUMN_ID, CardTable.CARD_NAME,
                 CardTable.BILLING_DAY, CardTable.GRACE_PERIOD, CardTable.CARD_SCORE };

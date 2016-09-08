@@ -1,13 +1,9 @@
 package in.haridas.creditpay;
 
-import android.provider.CalendarContract;
-
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
