@@ -6,4 +6,9 @@
         android:title="Delete"
         app:showAsAction="ifRoom"
         />
+    <item
+        android:id="@+id/action_update_card"
+        android:title="Update"
+        app:showAsAction="always"
+        />
 </menu>
