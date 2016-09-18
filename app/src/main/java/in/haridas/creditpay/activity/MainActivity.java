@@ -8,10 +8,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.*;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -22,17 +24,22 @@ import in.haridas.creditpay.database.CardTable;
 /**
  * List the Cards based on its score.
  */
-public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private SimpleCursorAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-//        setSupportActionBar(toolbar);
+
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+        listView = (ListView)findViewById(R.id.card_list_view);
 
         loadCards();
 
@@ -42,6 +49,15 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
             public void onClick(View view) {
                 Intent newCardForm = new Intent(MainActivity.this, NewCardForm.class);
                 startActivity(newCardForm);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), CardView.class);
+                intent.putExtra("id", id);
+                startActivity(intent);
             }
         });
     }
@@ -77,12 +93,12 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(this, R.layout.list_layout, null, from, to, 0);
 
-        setListAdapter(adapter);
+        listView.setAdapter(adapter);
 
         // Attach header to the card list view.
-        View header = getLayoutInflater().inflate(R.layout.card_list_header, getListView(), false);
-        getListView().addHeaderView(header, null, false);
-        getListView().setHeaderDividersEnabled(false);
+        View header = getLayoutInflater().inflate(R.layout.card_list_header, listView, false);
+        listView.addHeaderView(header, null, false);
+        listView.setHeaderDividersEnabled(false);
     }
 
 
@@ -109,13 +125,5 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-    }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Intent intent = new Intent(this, CardView.class);
-        intent.putExtra("id", id);
-        startActivity(intent);
     }
 }
