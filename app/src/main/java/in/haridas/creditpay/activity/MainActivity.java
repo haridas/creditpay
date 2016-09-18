@@ -79,6 +79,11 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
         adapter = new SimpleCursorAdapter(this, R.layout.list_layout, null, from, to, 0);
 
         setListAdapter(adapter);
+
+        // Attach header to the card list view.
+        View header = getLayoutInflater().inflate(R.layout.card_list_header, getListView(), false);
+        getListView().addHeaderView(header, null, false);
+        getListView().setHeaderDividersEnabled(false);
     }
 
 
@@ -111,8 +116,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Intent intent = new Intent(this, Card.class);
-        Uri cardUri = Uri.parse(CardContentProvider.CONTENT_URI + "/" + id);
-        intent.putExtra(CardContentProvider.CONTENT_ITEM_TYPE, cardUri);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 }

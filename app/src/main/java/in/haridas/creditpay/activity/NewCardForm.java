@@ -108,7 +108,7 @@ public class NewCardForm extends AppCompatActivity {
             Log.i(NewCardForm.class.getName(), "New card added..." + msg);
             startActivity(new Intent(NewCardForm.this, MainActivity.class));
         } else {
-//            Snackbar.make(view, "Wrong input, please check it", Snackbar.LENGTH_LONG)
+//            Snackbar  .make(view, "Wrong input, please check it", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show();
             Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
         }

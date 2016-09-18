@@ -23,4 +23,11 @@
 
     <include layout="@layout/content_new_card_form" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_new_card"
+        android:id="@+id/add_new_card"
+        android:layout_gravity="center_horizontal" />
+
 </android.support.design.widget.CoordinatorLayout>

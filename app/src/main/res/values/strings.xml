@@ -7,4 +7,5 @@
     <string name="billing_date_hint">Card Statement day(DD format)</string>
     <string name="grace_period_hint">Grace period ( 20 days )</string>
     <string name="add_new_card">Add New Card</string>
+    <string name="update_button">Update</string>
 </resources>
