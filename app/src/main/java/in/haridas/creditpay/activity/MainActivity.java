@@ -6,7 +6,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -31,9 +30,9 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
 //        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_main);
 
         loadCards();
 
@@ -115,7 +114,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Intent intent = new Intent(this, Card.class);
+        Intent intent = new Intent(this, CardView.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }

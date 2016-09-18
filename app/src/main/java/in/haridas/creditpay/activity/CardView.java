@@ -8,17 +8,20 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LongSparseArray;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
 
-public class Card extends AppCompatActivity {
+public class CardView extends AppCompatActivity {
 
     private static final String TAG = "CardActivity";
 
@@ -27,12 +30,15 @@ public class Card extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_card);
+        setSupportActionBar(toolbar);
+
         EditText cardName = (EditText)findViewById(R.id.card_name);
         EditText billingDay = (EditText)findViewById(R.id.billing_day);
         EditText gracePeriod = (EditText)findViewById(R.id.grace_period);
-        View button = findViewById(R.id.update_card_button);
+        Button button = (Button)findViewById(R.id.update_card_button);
 
-        long contentId = getIntent().getExtras().getLong("id");
+        final long contentId = getIntent().getExtras().getLong("id");
         String[] data = this.getDataFromProvider(contentId);
         if (data != null && data.length == 3) {
             cardName.setText(data[0]);
@@ -41,6 +47,12 @@ public class Card extends AppCompatActivity {
         } else {
             Log.e(TAG, "Card data is not correctly retrieved from database");
         }
+
+        button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -60,12 +72,21 @@ public class Card extends AppCompatActivity {
             Log.e(TAG, "Got null cursor from database. Uri: " + cardUri);
         } else if (mCursor.getCount() < 1) {
             Log.e(TAG, "The give card is not present in database");
+            mCursor.close();
 
         } else {
             mCursor.moveToFirst();
             data = new String[]{mCursor.getString(1), mCursor.getString(2), mCursor.getString(3)};
+            mCursor.close();
         }
         return data;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.card_menu, menu);
+        return true;
     }
 
     @Override

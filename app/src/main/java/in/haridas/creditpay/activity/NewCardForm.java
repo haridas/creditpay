@@ -29,7 +29,7 @@ public class NewCardForm extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_new_card_form);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_new_card_form);
         setSupportActionBar(toolbar);
 
         // Check if it's from saved instance.
