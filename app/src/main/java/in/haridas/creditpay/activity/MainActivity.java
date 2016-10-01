@@ -7,15 +7,20 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
@@ -26,13 +31,31 @@ import in.haridas.creditpay.database.CardTable;
  */
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private String TAG = getClass().getName();
     private SimpleCursorAdapter adapter;
     private ListView listView;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
+
+        // Auth code.
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListner = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
+                } else {
+                    Log.d(TAG, "onAUthStateChanged:signed_out");
+                }
+            }
+        };
 
         setContentView(R.layout.activity_main);
 
