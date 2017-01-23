@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import in.haridas.creditpay.R;
+import in.haridas.creditpay.card.CardBean;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
 
@@ -50,6 +51,17 @@ public class CardView extends AppCompatActivity {
         } else {
             Log.e(TAG, "Card data is not correctly retrieved from database");
         }
+    }
+
+
+    /**
+     * Get the card details from the cloud storage for editing.
+     *
+     * @param cardId
+     * @return
+     */
+    private CardBean getCardfromCloud(long cardId) {
+        return null;
     }
 
     private String[] getDataFromProvider(long contentId) {

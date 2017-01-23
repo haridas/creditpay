@@ -81,5 +81,10 @@ public class CardSelectorTest {
         assertEquals(49, hdfcCard.getScore(), 0);
         assertEquals(0, sbiCard.getScore(), 0);
 
+
+        reference = new GregorianCalendar(2016, 11, 10);
+        selector.setCardScores(reference.getTime());
+        assertEquals(46, hdfcCard.getScore(), 0);
+
     }
 }
