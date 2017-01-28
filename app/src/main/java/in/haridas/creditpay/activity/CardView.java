@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.card.CardBean;
+import in.haridas.creditpay.card.CardUtil;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
 
@@ -53,16 +54,6 @@ public class CardView extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * Get the card details from the cloud storage for editing.
-     *
-     * @param cardId
-     * @return
-     */
-    private CardBean getCardfromCloud(long cardId) {
-        return null;
-    }
 
     private String[] getDataFromProvider(long contentId) {
         String[] data = {};
@@ -117,7 +108,7 @@ public class CardView extends AppCompatActivity {
             case R.id.action_update_card:
                 contentId = getIntent().getExtras().getLong("id");
                 contentUri = ContentUris.withAppendedId(CardContentProvider.CONTENT_URI, contentId);
-                ContentValues values = CardView.getFormDataAndValidate(this);
+                ContentValues values = CardUtil.getFormDataAndValidate(this);
                 getContentResolver().update(contentUri, values, null, null);
                 Log.i(TAG, String.valueOf(contentId));
                 Toast.makeText(this, "Card updated.", Toast.LENGTH_SHORT).show();
@@ -132,26 +123,4 @@ public class CardView extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static ContentValues getFormDataAndValidate(CardView context) {
-        String cardName = ((EditText)context.findViewById(R.id.card_name)).getText().toString();
-        String billingDay = ((EditText)context.findViewById(R.id.billing_day)).getText().toString();
-        String gracePeriod = ((EditText)context.findViewById(R.id.grace_period)).getText().toString();
-
-        String msg = cardName + " : " + billingDay + " : " + gracePeriod;
-
-        // Add the record into database.
-
-        ContentValues values = new ContentValues();
-        if (cardName.length() > 0 && billingDay.length() > 0) {
-            values.put(CardTable.CARD_NAME, cardName);
-            values.put(CardTable.BILLING_DAY, billingDay);
-            values.put(CardTable.GRACE_PERIOD, gracePeriod);
-
-            Log.i(NewCardForm.class.getName(), "New card added..." + msg);
-        } else {
-            Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
-        }
-
-        return values;
-    }
 }

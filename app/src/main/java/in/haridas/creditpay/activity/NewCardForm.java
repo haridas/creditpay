@@ -94,7 +94,6 @@ public class NewCardForm extends AppCompatActivity {
         String msg = cardName + " : " + billingDay + " : " + gracePeriod;
 
         // Add the record into database.
-
         if (cardName.length() > 0 && billingDay.length() > 0) {
             ContentValues values = new ContentValues();
             values.put(CardTable.CARD_NAME, cardName);
@@ -103,38 +102,14 @@ public class NewCardForm extends AppCompatActivity {
 
             getContentResolver().insert(CardContentProvider.CONTENT_URI, values);
 
-//            Snackbar.make(view, "Added new card ->" + msg, Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show();
             Log.i(NewCardForm.class.getName(), "New card added..." + msg);
             startActivity(new Intent(NewCardForm.this, MainActivity.class));
         } else {
-//            Snackbar  .make(view, "Wrong input, please check it", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show();
             Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
         }
-
     }
 
-    public static ContentValues getFormDataAndValidate( View context) {
-        String cardName = ((EditText)context.findViewById(R.id.card_name)).getText().toString();
-        String billingDay = ((EditText)context.findViewById(R.id.billing_day)).getText().toString();
-        String gracePeriod = ((EditText)context.findViewById(R.id.grace_period)).getText().toString();
+    private void saveNewCard() {
 
-        String msg = cardName + " : " + billingDay + " : " + gracePeriod;
-
-        // Add the record into database.
-
-        ContentValues values = new ContentValues();
-        if (cardName.length() > 0 && billingDay.length() > 0) {
-            values.put(CardTable.CARD_NAME, cardName);
-            values.put(CardTable.BILLING_DAY, billingDay);
-            values.put(CardTable.GRACE_PERIOD, gracePeriod);
-
-            Log.i(NewCardForm.class.getName(), "New card added..." + msg);
-        } else {
-            Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
-        }
-
-        return values;
     }
 }

@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if(auth.getCurrentUser() != null) {
             Log.d(TAG, "User is already signed in");
-//                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-//                CardBean card = new CardBean(2, "HDFC", 5, 20);
-//                ref.push().setValue(card);
         } else  {
             Log.d(TAG, "User not signed in.");
 
@@ -132,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadFromFirebase() {
         ListView cardListView = (ListView) findViewById(R.id.card_list_view);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase fDb = FirebaseDatabase.getInstance();
+        fDb.setPersistenceEnabled(true);
+        DatabaseReference ref = fDb.getReference();
         mAdaptor = new FirebaseListAdapter<CardBean>(this, CardBean.class, R.layout.list_layout, ref) {
             @Override
             protected void populateView(View view, CardBean cardBean, int position) {
