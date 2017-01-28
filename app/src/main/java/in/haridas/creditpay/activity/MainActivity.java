@@ -26,6 +26,7 @@ import java.util.Arrays;
 
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.card.CardBean;
+import in.haridas.creditpay.database.FirebaseDbUtil;
 
 /**
  * List the Cards based on its score.
@@ -39,15 +40,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         
         super.onCreate(savedInstanceState);
-
-        // For rendering improvements.
-        getWindow().setBackgroundDrawable(null);
-//        getWindow().setBackgroundDrawableResource(R.mipmap.ic_launcher);
-
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-//        setSupportActionBar(toolbar);
+
         firebaseLogin();
         loadFromFirebase();
 
@@ -129,16 +124,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadFromFirebase() {
         ListView cardListView = (ListView) findViewById(R.id.card_list_view);
-        FirebaseDatabase fDb = FirebaseDatabase.getInstance();
-        fDb.setPersistenceEnabled(true);
-        DatabaseReference ref = fDb.getReference();
+        DatabaseReference ref = FirebaseDbUtil.getFirebaseDbReference();
         mAdaptor = new FirebaseListAdapter<CardBean>(this, CardBean.class, R.layout.list_layout, ref) {
             @Override
             protected void populateView(View view, CardBean cardBean, int position) {
                 ((TextView)view.findViewById(R.id.card_name)).setText(cardBean.getCardName());
                 ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(cardBean.getBillingDate()));
                 ((TextView)view.findViewById(R.id.grace_period)).setText(String.valueOf(cardBean.getGracePeriod()));
-                ((TextView)view.findViewById(R.id.card_score)).setText(String.valueOf(cardBean.getId()));
+//                ((TextView)view.findViewById(R.id.card_score)).setText(String.valueOf(cardBean.getId()));
             }
         };
 

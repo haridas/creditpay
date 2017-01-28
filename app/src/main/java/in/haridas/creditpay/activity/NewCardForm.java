@@ -11,10 +11,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import in.haridas.creditpay.Constants;
 import in.haridas.creditpay.R;
+import in.haridas.creditpay.card.Card;
+import in.haridas.creditpay.card.CardBean;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
+import in.haridas.creditpay.database.FirebaseDbUtil;
 
 public class NewCardForm extends AppCompatActivity {
 
@@ -24,6 +32,8 @@ public class NewCardForm extends AppCompatActivity {
 
     private CardTable cardTable;
     private Uri cardUri;
+
+    private static final String TAG = NewCardForm.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -93,15 +103,13 @@ public class NewCardForm extends AppCompatActivity {
 
         String msg = cardName + " : " + billingDay + " : " + gracePeriod;
 
+        // providing default Graceperiod.
+        if (gracePeriod.trim().length() == 0) {
+            gracePeriod = String.valueOf(Constants.DEFAULT_GRACE_PERIOD);
+        }
         // Add the record into database.
         if (cardName.length() > 0 && billingDay.length() > 0) {
-            ContentValues values = new ContentValues();
-            values.put(CardTable.CARD_NAME, cardName);
-            values.put(CardTable.BILLING_DAY, billingDay);
-            values.put(CardTable.GRACE_PERIOD, gracePeriod);
-
-            getContentResolver().insert(CardContentProvider.CONTENT_URI, values);
-
+            saveToFirebaseDb(cardName, billingDay, gracePeriod);
             Log.i(NewCardForm.class.getName(), "New card added..." + msg);
             startActivity(new Intent(NewCardForm.this, MainActivity.class));
         } else {
@@ -109,7 +117,26 @@ public class NewCardForm extends AppCompatActivity {
         }
     }
 
-    private void saveNewCard() {
+    private void saveToLocalDB(String cardName, String billingDay, String gracePeriod) {
+        ContentValues values = new ContentValues();
+        values.put(CardTable.CARD_NAME, cardName);
+        values.put(CardTable.BILLING_DAY, billingDay);
+        values.put(CardTable.GRACE_PERIOD, gracePeriod);
+        getContentResolver().insert(CardContentProvider.CONTENT_URI, values);
+    }
+
+    private void saveToFirebaseDb(String cardName, String billingDay, String gracePeriod) {
+        DatabaseReference ref = FirebaseDbUtil.getFirebaseDbReference();
+
+        try {
+            int bd = Integer.parseInt(billingDay);
+            int gp = Integer.parseInt(gracePeriod);
+            CardBean cardBean = new CardBean(cardName, bd, gp);
+            ref.push().setValue(cardBean);
+        } catch (NumberFormatException ex) {
+            Log.e(TAG, "Error while saving the card, please provide correct data");
+            Toast.makeText(this, "Failed to add new card, please check input.", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }
