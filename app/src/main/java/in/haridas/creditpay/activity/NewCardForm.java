@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -126,12 +127,15 @@ public class NewCardForm extends AppCompatActivity {
     }
 
     private void saveToFirebaseDb(String cardName, String billingDay, String gracePeriod) {
-        DatabaseReference ref = FirebaseDbUtil.getFirebaseDbReference();
+
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDbUtil.getFirebaseDbReference(uid);
 
         try {
             int bd = Integer.parseInt(billingDay);
             int gp = Integer.parseInt(gracePeriod);
-            CardBean cardBean = new CardBean(cardName, bd, gp);
+            CardBean cardBean = new CardBean(email, cardName, bd, gp);
             ref.push().setValue(cardBean);
         } catch (NumberFormatException ex) {
             Log.e(TAG, "Error while saving the card, please provide correct data");

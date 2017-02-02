@@ -19,29 +19,18 @@
             </intent-filter>
         </activity>
 
-
          <activity
          android:name="in.haridas.creditpay.activity.NewCardForm"
          android:label="@string/title_activity_new_card_form"
          android:theme="@style/AppTheme.NoActionBar" />
 
-
         <!-- <provider -->
         <!-- android:name="in.haridas.creditpay.contentprovider.CardContentProvider" -->
         <!-- android:authorities="in.haridas.creditpay.contentprovider" /> -->
 
-
-        <!-- <activity android:name="in.haridas.creditpay.activity.CardView" -->
-        <!-- android:label="Update Card" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
-        <!--<activity android:name=".activity.WindowPreview"-->
-            <!--android:theme="@style/AppTheme.NoActionBar">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+         <activity android:name="in.haridas.creditpay.activity.CardView"
+         android:label="Update Card"
+         android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

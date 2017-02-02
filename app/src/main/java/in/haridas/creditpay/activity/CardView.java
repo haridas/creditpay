@@ -21,11 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.card.CardBean;
 import in.haridas.creditpay.card.CardUtil;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
+import in.haridas.creditpay.database.FirebaseDbUtil;
 
 public class CardView extends AppCompatActivity {
 
@@ -43,15 +47,15 @@ public class CardView extends AppCompatActivity {
         EditText billingDay = (EditText)findViewById(R.id.billing_day);
         EditText gracePeriod = (EditText)findViewById(R.id.grace_period);
 
-        final long contentId = getIntent().getExtras().getLong("id");
-        String[] data = this.getDataFromProvider(contentId);
-        if (data != null && data.length == 3) {
-            cardName.setText(data[0]);
-            billingDay.setText(data[1]);
-            gracePeriod.setText(data[2]);
-        } else {
-            Log.e(TAG, "Card data is not correctly retrieved from database");
-        }
+        String rowKey = getIntent().getExtras().getString("key");
+        String rCardName = getIntent().getExtras().getString("cardName");
+        int rBillingDate = getIntent().getExtras().getInt("billingDate");
+        int rGracePeriod = getIntent().getExtras().getInt("gracePeriod");
+        String rEmail = getIntent().getExtras().getString("email");
+
+        cardName.setText(rCardName);
+        billingDay.setText(String.valueOf(rBillingDate));
+        gracePeriod.setText(String.valueOf(rGracePeriod));
     }
 
 

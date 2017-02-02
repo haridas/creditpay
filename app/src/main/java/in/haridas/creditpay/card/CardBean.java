@@ -8,12 +8,14 @@ public class CardBean {
     private int billingDate;
     private int gracePeriod;
     private String cardName;
+    private String userEmail;
 
     public CardBean() {
 
     }
 
-    public CardBean(String name, int bDate, int gPeriod) {
+    public CardBean(String email, String name, int bDate, int gPeriod) {
+        userEmail = email;
         cardName = name;
         billingDate = bDate;
         gracePeriod = gPeriod;
@@ -41,5 +43,13 @@ public class CardBean {
 
     public void setCardName(String cardName) {
         this.cardName = cardName;
+    }
+
+    public String getEmail() {
+        return userEmail;
+    }
+
+    public void setEmail(String email) {
+        this.userEmail = email;
     }
 }

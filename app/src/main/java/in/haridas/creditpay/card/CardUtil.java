@@ -1,16 +1,12 @@
 package in.haridas.creditpay.card;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.EditText;
 
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.activity.CardView;
 import in.haridas.creditpay.activity.NewCardForm;
-import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
 
 /**
@@ -36,7 +32,7 @@ public class CardUtil {
             values.put(CardTable.BILLING_DAY, billingDay);
             values.put(CardTable.GRACE_PERIOD, gracePeriod);
 
-            Log.i(NewCardForm.class.getName(), "New card added..." + msg);
+            Log.i(NewCardForm.class.getName(), "Card holds a valid set of values." + msg);
         } else {
             Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
         }

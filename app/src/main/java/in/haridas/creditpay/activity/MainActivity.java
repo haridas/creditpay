@@ -19,6 +19,7 @@ import com.firebase.ui.auth.BuildConfig;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,12 +56,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListView listView = (ListView)findViewById(R.id.card_list_view);
+        final ListView listView = (ListView)findViewById(R.id.card_list_view);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Object obj = listView.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), CardView.class);
-                intent.putExtra("id", id);
+                intent.putExtra("key", view.getTag().toString());
+                intent.putExtra("email", ((CardBean) obj).getEmail());
+                intent.putExtra("cardName", ((CardBean) obj).getCardName());
+                intent.putExtra("billingDate", ((CardBean) obj).getBillingDate());
+                intent.putExtra("gracePeriod", ((CardBean) obj).getGracePeriod());
                 startActivity(intent);
             }
         });
@@ -124,18 +131,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadFromFirebase() {
         ListView cardListView = (ListView) findViewById(R.id.card_list_view);
-        DatabaseReference ref = FirebaseDbUtil.getFirebaseDbReference();
+        DatabaseReference ref;
+        try {
+            ref = FirebaseDbUtil.getFirebaseDbReference(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        } catch (NullPointerException ex) {
+            ref = null;
+        }
         mAdaptor = new FirebaseListAdapter<CardBean>(this, CardBean.class, R.layout.list_layout, ref) {
             @Override
             protected void populateView(View view, CardBean cardBean, int position) {
                 ((TextView)view.findViewById(R.id.card_name)).setText(cardBean.getCardName());
                 ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(cardBean.getBillingDate()));
                 ((TextView)view.findViewById(R.id.grace_period)).setText(String.valueOf(cardBean.getGracePeriod()));
-//                ((TextView)view.findViewById(R.id.card_score)).setText(String.valueOf(cardBean.getId()));
+
+                // Tag each view in the list with unique id, so that we can retrieve this object back from db.
+                view.setTag(this.getRef(position).getKey());
             }
         };
 
         cardListView.setAdapter(mAdaptor);
+
+        // Attach header to the card list view.
+        View header = getLayoutInflater().inflate(R.layout.card_list_header, cardListView, false);
+        cardListView.addHeaderView(header, null, false);
+        cardListView.setHeaderDividersEnabled(false);
     }
 
 //    private void loadCards() {
