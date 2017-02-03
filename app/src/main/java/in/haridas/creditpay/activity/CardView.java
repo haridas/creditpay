@@ -21,9 +21,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import in.haridas.creditpay.Constants;
 import in.haridas.creditpay.R;
 import in.haridas.creditpay.card.CardBean;
 import in.haridas.creditpay.card.CardUtil;
@@ -97,12 +99,23 @@ public class CardView extends AppCompatActivity {
         int id = item.getItemId();
         long contentId;
         Uri contentUri;
+        String userUid;
+        DatabaseReference ref;
+        String rowKey;
+
+        try {
+            rowKey = getIntent().getExtras().getString("key");
+            userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            ref = FirebaseDbUtil.getFirebaseDbReference(userUid);
+        } catch (NullPointerException ex) {
+            rowKey = "";
+            userUid = "";
+            ref = null;
+        }
+
         switch (id) {
             case R.id.action_delete_card:
-                contentId = getIntent().getExtras().getLong("id");
-                contentUri = ContentUris.withAppendedId(CardContentProvider.CONTENT_URI, contentId);
-                Log.i(TAG, String.valueOf(contentId));
-                getContentResolver().delete(contentUri, null, null);
+                ref.getRef().child(rowKey).removeValue();
                 Toast.makeText(this, "Removed the Card.", Toast.LENGTH_SHORT).show();
 
                 // Go to the main activity after removing current card.
@@ -110,11 +123,19 @@ public class CardView extends AppCompatActivity {
                 startActivity(mainIntent);
                 break;
             case R.id.action_update_card:
-                contentId = getIntent().getExtras().getLong("id");
-                contentUri = ContentUris.withAppendedId(CardContentProvider.CONTENT_URI, contentId);
+
                 ContentValues values = CardUtil.getFormDataAndValidate(this);
-                getContentResolver().update(contentUri, values, null, null);
-                Log.i(TAG, String.valueOf(contentId));
+                String cardName = values.get(Constants.CARD_NAME).toString();
+                int billingDay = values.getAsInteger(Constants.BILLING_DAY);
+                int gracePeriod = values.getAsInteger(Constants.GRACE_PERIOD);
+                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                CardBean cardBean = new CardBean(
+                        email,
+                        cardName,
+                        billingDay,
+                        gracePeriod);
+
+                ref.getRef().child(rowKey).setValue(cardBean);
                 Toast.makeText(this, "Card updated.", Toast.LENGTH_SHORT).show();
 
                 // Go to the main activity after removing current card.
