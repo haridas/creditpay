@@ -78,7 +78,7 @@ public class CardContentProvider extends ContentProvider {
 
         // Sort the cursor based on its score, before passing to caller.
         CardSelector selector = new CardSelector(cursor);
-        cursor = selector.getSortedCursor();
+//        cursor = selector.getSortedCursor();
 
         // Notify potential event listeners.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);

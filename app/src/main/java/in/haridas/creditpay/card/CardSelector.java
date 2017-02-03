@@ -18,21 +18,13 @@ import in.haridas.creditpay.database.CardTable;
  */
 public class CardSelector {
 
-    List<Card> cards = null;
-
-    private class CardComparator implements Comparator<Card> {
-
-        @Override
-        public int compare(Card lhs, Card rhs) {
-            return (int) (lhs.getScore() - rhs.getScore());
-        }
-    }
+    private List<Card> cards = null;
 
     public CardSelector() {
         cards = new ArrayList<>();
     }
     public CardSelector(List<Card> cardDates) {
-        this.cards = cardDates;
+        cards = cardDates;
     }
 
     /**
@@ -68,7 +60,7 @@ public class CardSelector {
      * @param card Instance of Card.
      * @param referenceDate Reference date, eg; TODAY.
      */
-    public void setScore(Card card, Date referenceDate) {
+    private void setScore(Card card, Date referenceDate) {
         Calendar currentDate = GregorianCalendar.getInstance();
         currentDate.setTimeInMillis(referenceDate.getTime());
         int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
@@ -78,7 +70,7 @@ public class CardSelector {
         float score = 0;
 
 
-        if (currentDay > card.getStatementDay()) {
+        if (currentDay > card.getBillingDay()) {
 
             // Use bellow equation
             // score = (nextStatementDate - currentDate; in abs(days) ) + gracePeriod.
@@ -86,10 +78,10 @@ public class CardSelector {
             Calendar nextStatementDate = GregorianCalendar.getInstance();
             nextStatementDate.setTimeInMillis(referenceDate.getTime());
             nextStatementDate.set(Calendar.MONTH, currentDate.get(Calendar.MONTH) + 1);
-            nextStatementDate.set(Calendar.DATE, card.getStatementDay());
+            nextStatementDate.set(Calendar.DATE, card.getBillingDay());
             score = getDiffByDay(nextStatementDate, currentDate) + card.getGracePeriod();
-        } else if (currentDay < card.getStatementDay()){
-            score = card.getStatementDay() - currentDay + card.getGracePeriod();
+        } else if (currentDay < card.getBillingDay()){
+            score = card.getBillingDay() - currentDay + card.getGracePeriod();
         } else {
             // Today is the billing date, so this card will get least score.
             score = 0;
@@ -163,32 +155,29 @@ public class CardSelector {
 
     public List<Card> getSortedCards() {
         setCardScores(new Date());
-
         // Sort the card based on score, use selection sort.
-//        Arrays.sort(cards, new CardComparator());
         Collections.sort(cards);
-
         return cards;
     }
 
-    /**
-     * Get Processed result as MatrixCursor.
-     *
-     * Will sort the cards prepare a cursor for UI elements.
-     */
-    public MatrixCursor getSortedCursor() {
-
-        List<Card> sortedCards = getSortedCards();
-        int numCards = sortedCards.size();
-        String[] columns = new String[]{CardTable.COLUMN_ID, CardTable.CARD_NAME,
-                CardTable.BILLING_DAY, CardTable.GRACE_PERIOD, CardTable.CARD_SCORE };
-        MatrixCursor cursor = new MatrixCursor(columns, numCards);
-        for (int i=0; i < numCards; i++) {
-            Card card = sortedCards.get(i);
-            cursor.addRow(card.getDbRow());
-        }
-        return cursor;
-    }
+//    /**
+//     * Get Processed result as MatrixCursor.
+//     *
+//     * Will sort the cards prepare a cursor for UI elements.
+//     */
+//    public MatrixCursor getSortedCursor() {
+//
+//        List<Card> sortedCards = getSortedCards();
+//        int numCards = sortedCards.size();
+//        String[] columns = new String[]{CardTable.COLUMN_ID, CardTable.CARD_NAME,
+//                CardTable.BILLING_DAY, CardTable.GRACE_PERIOD, CardTable.CARD_SCORE };
+//        MatrixCursor cursor = new MatrixCursor(columns, numCards);
+//        for (int i=0; i < numCards; i++) {
+//            Card card = sortedCards.get(i);
+//            cursor.addRow(card.getDbRow());
+//        }
+//        return cursor;
+//    }
 
     /**
      * Pick the best card that can be used today based on the

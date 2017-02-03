@@ -20,6 +20,11 @@ import in.haridas.creditpay.database.CardTable;
 
 public class NewCardForm extends AppCompatActivity {
 
+    private EditText cardNameBox;
+    private EditText billingDayBox;
+    private EditText gracePeriodBox;
+
+    private CardTable cardTable;
     private Uri cardUri;
 
     private static final String TAG = NewCardForm.class.getCanonicalName();
@@ -34,11 +39,11 @@ public class NewCardForm extends AppCompatActivity {
         // Check if it's from saved instance.
         Bundle extras = getIntent().getExtras();
 
-        if (extras != null) {
-            cardUri = (bundle == null) ? null : (Uri) bundle.getParcelable(
-                    CardContentProvider.CONTENT_ITEM_TYPE);
-            fillData(cardUri);
-        }
+//        if (extras != null) {
+//            cardUri = (bundle == null) ? null : (Uri) bundle.getParcelable(
+//                    CardContentProvider.CONTENT_ITEM_TYPE);
+//            fillData(cardUri);
+//        }
 
         // Add button listener.
         Button addNewCardButton = (Button)findViewById(R.id.add_new_card);
@@ -65,25 +70,25 @@ public class NewCardForm extends AppCompatActivity {
         bundle.putParcelable(CardContentProvider.CONTENT_ITEM_TYPE, cardUri);
     }
 
-    private void fillData(Uri cardUri) {
-
-        String[] projection = {CardTable.CARD_NAME, CardTable.BILLING_DAY, CardTable.GRACE_PERIOD};
-        Cursor cursor = getContentResolver().query(cardUri, projection, null, null, null);
-
-        if(cursor != null) {
-            cursor.moveToFirst();
-            String cardName = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.CARD_NAME));
-            String billingDay = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.BILLING_DAY));
-            String gracePeriod = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.GRACE_PERIOD));
-
-            cardNameBox.setText(cardName);
-            billingDayBox.setText(billingDay);
-            gracePeriodBox.setText(gracePeriod);
-
-            // Close the cursor.
-            cursor.close();
-        }
-    }
+//    private void fillData(Uri cardUri) {
+//
+//        String[] projection = {CardTable.CARD_NAME, CardTable.BILLING_DAY, CardTable.GRACE_PERIOD};
+//        Cursor cursor = getContentResolver().query(cardUri, projection, null, null, null);
+//
+//        if(cursor != null) {
+//            cursor.moveToFirst();
+//            String cardName = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.CARD_NAME));
+//            String billingDay = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.BILLING_DAY));
+//            String gracePeriod = cursor.getString(cursor.getColumnIndexOrThrow(CardTable.GRACE_PERIOD));
+//
+//            cardNameBox.setText(cardName);
+//            billingDayBox.setText(billingDay);
+//            gracePeriodBox.setText(gracePeriod);
+//
+//            // Close the cursor.
+//            cursor.close();
+//        }
+//    }
 
     private void saveUIState() {
         ContentValues values = CardUtil.getFormDataAndValidate(this);

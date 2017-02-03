@@ -4,29 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.BuildConfig;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
 import in.haridas.creditpay.R;
-import in.haridas.creditpay.card.CardBean;
+import in.haridas.creditpay.card.Card;
 import in.haridas.creditpay.database.FirebaseDbUtil;
 
 /**
@@ -35,7 +27,7 @@ import in.haridas.creditpay.database.FirebaseDbUtil;
 public class MainActivity extends AppCompatActivity {
     private String TAG = getClass().getName();
     private static final int RC_SIGN_IN = 123;
-    private FirebaseListAdapter<CardBean> mAdaptor;
+    private FirebaseListAdapter<Card> mAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 Object obj = listView.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), CardView.class);
                 intent.putExtra("key", view.getTag().toString());
-                intent.putExtra("email", ((CardBean) obj).getEmail());
-                intent.putExtra("cardName", ((CardBean) obj).getCardName());
-                intent.putExtra("billingDate", ((CardBean) obj).getBillingDate());
-                intent.putExtra("gracePeriod", ((CardBean) obj).getGracePeriod());
+                intent.putExtra("email", ((Card) obj).getEmail());
+                intent.putExtra("cardName", ((Card) obj).getName());
+                intent.putExtra("billingDate", ((Card) obj).getBillingDay());
+                intent.putExtra("gracePeriod", ((Card) obj).getGracePeriod());
                 startActivity(intent);
             }
         });
@@ -137,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (NullPointerException ex) {
             ref = null;
         }
-        mAdaptor = new FirebaseListAdapter<CardBean>(this, CardBean.class, R.layout.list_layout, ref) {
+        mAdaptor = new FirebaseListAdapter<Card>(this, Card.class, R.layout.list_layout, ref) {
             @Override
-            protected void populateView(View view, CardBean cardBean, int position) {
-                ((TextView)view.findViewById(R.id.card_name)).setText(cardBean.getCardName());
-                ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(cardBean.getBillingDate()));
+            protected void populateView(View view, Card cardBean, int position) {
+                ((TextView)view.findViewById(R.id.card_name)).setText(cardBean.getName());
+                ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(cardBean.getBillingDay()));
                 ((TextView)view.findViewById(R.id.grace_period)).setText(String.valueOf(cardBean.getGracePeriod()));
 
                 // Tag each view in the list with unique id, so that we can retrieve this object back from db.

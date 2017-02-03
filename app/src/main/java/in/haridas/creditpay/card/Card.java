@@ -8,46 +8,57 @@ public class Card implements Comparable {
     /**
      * Id of the card, we won't consider the default value of the id.
      */
-    int _id = -1;
+    private int _id = -1;
 
     /**
      * Statement date between 1-28.
      */
-    int statementDay = 0;
+    private int billingDay = 0;
 
     // Number of days after statement days
-    int gracePeriod = 0;
-    String name = null;
+    private int gracePeriod = 0;
+    private String name = null;
+    private String email = null;
 
     /**
      * A score attached to this card in the runtime, this will be
      * used to sort the list of card via we pick a card which has
      * good card for today.
      */
-    float score = 0;
+    private float score = 0;
 
     public Card() {
     }
 
-    public Card(String name, int statementDay, int gracePeriod) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Card(String email, String name, int billingDay, int gracePeriod) {
+        this.email = email;
+
         this.name = name;
-        this.statementDay = statementDay;
+        this.billingDay = billingDay;
         this.gracePeriod = gracePeriod;
     }
 
-    public Card(int id, String name, int statementDay, int gracePeriod) {
+    public Card(int id, String name, int billingDay, int gracePeriod) {
         this._id = id;
         this.name = name;
-        this.statementDay = statementDay;
+        this.billingDay = billingDay;
         this.gracePeriod = gracePeriod;
     }
 
-    public int getStatementDay() {
-        return statementDay;
+    public int getBillingDay() {
+        return billingDay;
     }
 
-    public void setStatementDay(int statementDay) {
-        this.statementDay = statementDay;
+    public void setBillingDay(int billingDay) {
+        this.billingDay = billingDay;
     }
 
     public int getGracePeriod() {
@@ -78,9 +89,11 @@ public class Card implements Comparable {
      * Helper method for Cursor, to add new card into cursor.
      *
      * @return String[]
+     *
+     * NOTE: Moved to private scope as it's not serializable in ArrayList mode.
      */
-    public Object[] getDbRow() {
-        return  new Object[] {_id, name, statementDay, gracePeriod, getScore()};
+    private Object[] getDbRow() {
+        return  new Object[] {_id, name, billingDay, gracePeriod, getScore()};
     }
 
     @Override
@@ -90,6 +103,5 @@ public class Card implements Comparable {
         } else {
             return -1;
         }
-//        return (int)(((Card)another).getScore() - this.getScore());
     }
 }

@@ -1,33 +1,25 @@
 package in.haridas.creditpay.activity;
 
-import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.LongSparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import in.haridas.creditpay.Constants;
 import in.haridas.creditpay.R;
-import in.haridas.creditpay.card.CardBean;
+import in.haridas.creditpay.card.Card;
 import in.haridas.creditpay.card.CardUtil;
 import in.haridas.creditpay.contentprovider.CardContentProvider;
 import in.haridas.creditpay.database.CardTable;
@@ -129,7 +121,7 @@ public class CardView extends AppCompatActivity {
                 int billingDay = values.getAsInteger(Constants.BILLING_DAY);
                 int gracePeriod = values.getAsInteger(Constants.GRACE_PERIOD);
                 String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                CardBean cardBean = new CardBean(
+                Card cardBean = new Card(
                         email,
                         cardName,
                         billingDay,

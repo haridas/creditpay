@@ -85,8 +85,8 @@ public class CardUtil {
         try {
             int bd = Integer.parseInt(billingDay);
             int gp = Integer.parseInt(gracePeriod);
-            CardBean cardBean = new CardBean(email, cardName, bd, gp);
-            ref.push().setValue(cardBean);
+            Card card = new Card(email, cardName, bd, gp);
+            ref.push().setValue(card);
         } catch (NumberFormatException ex) {
             Log.e(TAG, "Error while saving the card, please provide correct data");
             return false;
