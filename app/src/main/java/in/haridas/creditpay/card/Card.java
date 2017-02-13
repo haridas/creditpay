@@ -1,5 +1,7 @@
 package in.haridas.creditpay.card;
 
+import com.google.firebase.database.Exclude;
+
 /**
  * Created by haridas on 8/4/16.
  */
@@ -92,6 +94,7 @@ public class Card implements Comparable {
      *
      * NOTE: Moved to private scope as it's not serializable in ArrayList mode.
      */
+    @Exclude
     private Object[] getDbRow() {
         return  new Object[] {_id, name, billingDay, gracePeriod, getScore()};
     }

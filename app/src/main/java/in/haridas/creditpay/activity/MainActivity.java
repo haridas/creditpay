@@ -15,9 +15,12 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 
 import in.haridas.creditpay.R;
+import in.haridas.creditpay.adaptors.YcardFirebaseListAdaptor;
 import in.haridas.creditpay.card.Card;
 import in.haridas.creditpay.database.FirebaseDbUtil;
 
@@ -27,7 +30,7 @@ import in.haridas.creditpay.database.FirebaseDbUtil;
 public class MainActivity extends AppCompatActivity {
     private String TAG = getClass().getName();
     private static final int RC_SIGN_IN = 123;
-    private FirebaseListAdapter<Card> mAdaptor;
+    private YcardFirebaseListAdaptor<Card> mAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,13 +131,17 @@ public class MainActivity extends AppCompatActivity {
             ref = FirebaseDbUtil.getFirebaseDbReference(FirebaseAuth.getInstance().getCurrentUser().getUid());
         } catch (NullPointerException ex) {
             ref = null;
+            return;
         }
-        mAdaptor = new FirebaseListAdapter<Card>(this, Card.class, R.layout.list_layout, ref) {
+        mAdaptor = new YcardFirebaseListAdaptor<Card>(this, Card.class, R.layout.list_layout, ref) {
             @Override
-            protected void populateView(View view, Card cardBean, int position) {
-                ((TextView)view.findViewById(R.id.card_name)).setText(cardBean.getName());
-                ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(cardBean.getBillingDay()));
-                ((TextView)view.findViewById(R.id.grace_period)).setText(String.valueOf(cardBean.getGracePeriod()));
+            protected void populateView(View view, Card cardModel, int position) {
+                Card card = cardList.get(position);
+                Log.i(TAG, "Data: " + card.getName() + " " + card.getBillingDay() + " " + card.getGracePeriod());
+                ((TextView)view.findViewById(R.id.card_name)).setText(card.getName());
+                ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(card.getBillingDay()));
+                ((TextView)view.findViewById(R.id.grace_period)).setText(String.valueOf(card.getGracePeriod()));
+                ((TextView)view.findViewById(R.id.card_score)).setText(String.valueOf(card.getScore()));
 
                 // Tag each view in the list with unique id, so that we can retrieve this object back from db.
                 view.setTag(this.getRef(position).getKey());
@@ -143,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
 
         cardListView.setAdapter(mAdaptor);
 
-        // Attach header to the card list view.
-        View header = getLayoutInflater().inflate(R.layout.card_list_header, cardListView, false);
-        cardListView.addHeaderView(header, null, false);
-        cardListView.setHeaderDividersEnabled(false);
+//        // Attach header to the card list view.
+//        View header = getLayoutInflater().inflate(R.layout.card_list_header, cardListView, false);
+//        cardListView.addHeaderView(header, null, false);
+//        cardListView.setHeaderDividersEnabled(false);
     }
 
 //    private void loadCards() {
