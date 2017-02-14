@@ -2,6 +2,8 @@ package in.haridas.creditpay.card;
 
 import com.google.firebase.database.Exclude;
 
+import static android.R.attr.id;
+
 /**
  * Created by haridas on 8/4/16.
  */
@@ -10,7 +12,15 @@ public class Card implements Comparable {
     /**
      * Id of the card, we won't consider the default value of the id.
      */
-    private int _id = -1;
+    private int index = -1;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
     /**
      * Statement date between 1-28.
@@ -48,8 +58,8 @@ public class Card implements Comparable {
         this.gracePeriod = gracePeriod;
     }
 
-    public Card(int id, String name, int billingDay, int gracePeriod) {
-        this._id = id;
+    public Card(int index, String name, int billingDay, int gracePeriod) {
+        this.index = index;
         this.name = name;
         this.billingDay = billingDay;
         this.gracePeriod = gracePeriod;
@@ -96,7 +106,7 @@ public class Card implements Comparable {
      */
     @Exclude
     private Object[] getDbRow() {
-        return  new Object[] {_id, name, billingDay, gracePeriod, getScore()};
+        return  new Object[] {index, name, billingDay, gracePeriod, getScore()};
     }
 
     @Override

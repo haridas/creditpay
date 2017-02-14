@@ -99,12 +99,25 @@ public abstract class YcardFirebaseListAdaptor<T> extends BaseAdapter {
     private void sortCards() {
         if (getCount() > 0) {
             for (int i = 1; i <= getCount(); i++) {
-                cardList.add((Card) getItem(i - 1));
+                Card card = (Card)getItem(i - 1);
+                card.setIndex(i - 1);
+                cardList.add(card);
             }
             CardSelector selector = new CardSelector(cardList);
             selector.setCardScores(GregorianCalendar.getInstance().getTime());
             cardList = selector.getSortedCards();
-            Log.i(TAG, "Sorted cards: " + cardList);
+
+            Log.i(TAG, "Cards resorted...");
+
+            // Updated the snapshot list.
+            List<DataSnapshot> snapshots = new ArrayList<>();
+            List<DataSnapshot> currSnapshot = mSnapshots.getmSnapshots();
+            for (Card c: cardList) {
+                // Keeping the original index info after sorting, reconstructing the mSnapshots list.
+                snapshots.add(currSnapshot.get(c.getIndex()));
+            }
+            // Override the sorted snapshots back.
+            mSnapshots.setmSnapshots(snapshots);
         }
     }
 
@@ -152,7 +165,8 @@ public abstract class YcardFirebaseListAdaptor<T> extends BaseAdapter {
             view = mActivity.getLayoutInflater().inflate(mLayout, viewGroup, false);
         }
 
-        T model = getItem(position);
+//        T model = getItem(position);
+        Card model = cardList.get(position);
 
         // Call out to subclass to marshall this model into the provided view
         populateView(view, model, position);
@@ -194,5 +208,5 @@ public abstract class YcardFirebaseListAdaptor<T> extends BaseAdapter {
      * @param model    The object containing the data used to populate the view
      * @param position The position in the list of the view being populated
      */
-    protected abstract void populateView(View v, T model, int position);
+    protected abstract void populateView(View v, Card model, int position);
 }

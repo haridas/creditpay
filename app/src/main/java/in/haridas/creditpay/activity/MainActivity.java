@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("cardName", ((Card) obj).getName());
                 intent.putExtra("billingDate", ((Card) obj).getBillingDay());
                 intent.putExtra("gracePeriod", ((Card) obj).getGracePeriod());
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -135,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mAdaptor = new YcardFirebaseListAdaptor<Card>(this, Card.class, R.layout.list_layout, ref) {
             @Override
-            protected void populateView(View view, Card cardModel, int position) {
-                Card card = cardList.get(position);
+            protected void populateView(View view, Card card, int position) {
                 Log.i(TAG, "Data: " + card.getName() + " " + card.getBillingDay() + " " + card.getGracePeriod());
                 ((TextView)view.findViewById(R.id.card_name)).setText(card.getName());
                 ((TextView)view.findViewById(R.id.billing_day)).setText(String.valueOf(card.getBillingDay()));

@@ -112,7 +112,9 @@ public class CardView extends AppCompatActivity {
 
                 // Go to the main activity after removing current card.
                 Intent mainIntent = new Intent(this, MainActivity.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(mainIntent);
+                finish();
                 break;
             case R.id.action_update_card:
 
@@ -132,7 +134,9 @@ public class CardView extends AppCompatActivity {
 
                 // Go to the main activity after removing current card.
                 mainIntent = new Intent(this, MainActivity.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(mainIntent);
+                finish();
                 break;
             default:
                 break;
