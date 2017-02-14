@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import in.haridas.creditpay.Constants;
 import in.haridas.creditpay.R;
@@ -51,8 +52,9 @@ public class NewCardForm extends AppCompatActivity {
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                setResult(RESULT_OK);
+                saveUIState();
+//                finish();
+//                setResult(RESULT_OK);
             }
         });
     }
@@ -60,7 +62,7 @@ public class NewCardForm extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        this.saveUIState();
+//        this.saveUIState();
     }
 
     @Override
@@ -92,18 +94,28 @@ public class NewCardForm extends AppCompatActivity {
 
     private void saveUIState() {
         ContentValues values = CardUtil.getFormDataAndValidate(this);
-        String cardName = values.get(Constants.CARD_NAME).toString();
-        String billingDay = values.get(Constants.BILLING_DAY).toString();
-        String gracePeriod = values.get(Constants.GRACE_PERIOD).toString();
 
-        String msg = cardName + " : " + billingDay + " : " + gracePeriod;
+        if (values.size() > 0) {
+            String cardName = values.get(Constants.CARD_NAME).toString();
+            String billingDay = values.get(Constants.BILLING_DAY).toString();
+            String gracePeriod = values.get(Constants.GRACE_PERIOD).toString();
 
-        boolean status = CardUtil.saveToFirebaseDb(cardName, billingDay, gracePeriod);
-        if (status) {
-            Log.i(NewCardForm.class.getName(), "New card added..." + msg);
-            startActivity(new Intent(NewCardForm.this, MainActivity.class));
+            String msg = cardName + " : " + billingDay + " : " + gracePeriod;
+
+            boolean status = CardUtil.saveToFirebaseDb(cardName, billingDay, gracePeriod);
+            if (status) {
+                Log.i(NewCardForm.class.getName(), "New card added..." + msg);
+                Toast.makeText(this, "New Card added...", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
+                Toast.makeText(this, "Failed to save card...", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent mainIntent = new Intent(NewCardForm.this, MainActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(mainIntent);
         } else {
-            Log.e(NewCardForm.class.getName(), "Failed to add new card, data is not correct: " + msg);
+            Toast.makeText(this, "No data to save...", Toast.LENGTH_SHORT).show();
         }
     }
 
