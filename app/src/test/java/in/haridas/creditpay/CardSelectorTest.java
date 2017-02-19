@@ -41,9 +41,9 @@ public class CardSelectorTest {
     public void test_set_card_score() throws Exception {
 
         // Cards.
-        Card cityCard = new Card("CITY", 21, 20);
-        Card hdfcCard = new Card("HDFC", 5, 20);
-        Card sbiCard = new Card("SBI", 7, 20);
+        Card cityCard = new Card("", "CITY", 21, 20);
+        Card hdfcCard = new Card("", "HDFC", 5, 20);
+        Card sbiCard = new Card("", "SBI", 7, 20);
 
         List<Card> cards = new ArrayList<>();
         cards.add(cityCard);

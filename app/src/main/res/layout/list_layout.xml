@@ -38,4 +38,5 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@id/card_score" />
+
 </LinearLayout>
