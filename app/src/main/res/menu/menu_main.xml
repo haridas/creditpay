@@ -3,6 +3,10 @@
 xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/username"
+        android:title=""
+        app:showAsAction="never" />
+    <item
         android:id="@+id/logout"
         android:title="Logout"
         app:showAsAction="never"

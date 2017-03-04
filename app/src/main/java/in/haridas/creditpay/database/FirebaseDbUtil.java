@@ -18,12 +18,16 @@ public class FirebaseDbUtil {
     private static final String FIREBASE_REF_NAME = "cards";
     private static DatabaseReference dbRef = null;
 
+    private static FirebaseDatabase getDbRef() {
+        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+        return fdb;
+    }
+
     public static DatabaseReference getFirebaseDbReference(String userEmail) {
-        if (dbRef == null) {
-            FirebaseDatabase fdb = FirebaseDatabase.getInstance();
-            fdb.setPersistenceEnabled(true);
-            dbRef = fdb.getReference(userEmail);
-        }
-        return dbRef;
+        return FirebaseDatabase.getInstance().getReference(userEmail);
+    }
+
+    public static void goOffline() {
+        FirebaseDatabase.getInstance().goOffline();
     }
 }

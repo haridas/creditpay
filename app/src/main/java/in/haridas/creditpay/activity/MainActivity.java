@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.BuildConfig;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +33,7 @@ import in.haridas.creditpay.database.FirebaseDbUtil;
 public class MainActivity extends AppCompatActivity {
     private String TAG = getClass().getName();
     private YcardFirebaseListAdaptor<Card> mAdaptor;
+    private Menu menu = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void loadFromFirebase() {
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference ref;
         try {
             ref = FirebaseDbUtil.getFirebaseDbReference(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
         } catch (NullPointerException ex) {
             Log.e(TAG, "Error in firebase initialization,  " + String.valueOf(ex));
             return; // No point continue further.
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 view.setTag(this.getRef(position).getKey());
             }
         };
+        cardListView.setEmptyView(findViewById(R.id.empty_list));
         cardListView.setAdapter(mAdaptor);
     }
 
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -113,6 +119,18 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        try {
+            refreshMenuText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            return true;
+        } catch (NullPointerException ex) {
+            return false;
+        }
+    }
+
+
     private void logoutFromFirebase() {
         AuthUI.getInstance()
                 .signOut(this)
@@ -122,14 +140,21 @@ public class MainActivity extends AppCompatActivity {
                         // Going to main activity automatically route to login page.
                         Intent main = new Intent(getApplicationContext(), LoginActivity.class);
                         main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mAdaptor.cleanup();
                         startActivity(main);
                         finish();
                     }
                 });
     }
 
+    private void refreshMenuText(String username) {
+        MenuItem menuItem = this.menu.findItem(R.id.username);
+        menuItem.setTitle(username);
+    }
+
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "Cleaning the Adaptor and firebase connections..");
         if (mAdaptor != null) {
             mAdaptor.cleanup();
         }

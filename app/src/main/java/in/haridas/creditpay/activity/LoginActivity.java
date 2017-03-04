@@ -58,14 +58,14 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "Login Failed...");
                 if (response == null) {
                     Toast.makeText(this, R.string.sign_in_cacncelled, Toast.LENGTH_SHORT).show();
-                }
+                } else {
+                    if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+                    }
 
-                if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                }
-
-                if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    Toast.makeText(this, R.string.unknown_signin_error, Toast.LENGTH_SHORT).show();
+                    if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                        Toast.makeText(this, R.string.unknown_signin_error, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
