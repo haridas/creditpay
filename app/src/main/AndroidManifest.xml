@@ -35,7 +35,6 @@
             android:name=".activity.CardView"
             android:label="Update Card"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.EmptyListView"></activity>
     </application>
 
 </manifest>

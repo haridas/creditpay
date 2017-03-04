@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadFromFirebase() {
         ListView cardListView = (ListView) findViewById(R.id.card_list_view);
+        cardListView.setEmptyView(findViewById(R.id.no_card_msg));
         DatabaseReference ref;
         try {
             ref = FirebaseDbUtil.getFirebaseDbReference(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -96,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 view.setTag(this.getRef(position).getKey());
             }
         };
-        cardListView.setEmptyView(findViewById(R.id.empty_list));
         cardListView.setAdapter(mAdaptor);
     }
 

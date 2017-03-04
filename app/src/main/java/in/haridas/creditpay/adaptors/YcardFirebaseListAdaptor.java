@@ -122,7 +122,6 @@ public abstract class YcardFirebaseListAdaptor<T> extends BaseAdapter {
     }
 
 
-
     public void cleanup() {
         mSnapshots.cleanup();
     }
