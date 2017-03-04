@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             refreshMenuText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
             return true;
         } catch (NullPointerException ex) {
             return false;
@@ -150,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
     private void refreshMenuText(String username) {
         MenuItem menuItem = this.menu.findItem(R.id.username);
         menuItem.setTitle(username);
+
+        MenuItem versionMenu = this.menu.findItem(R.id.app_version);
+        versionMenu.setTitle("App Version: " + BuildConfig.VERSION_NAME);
     }
 
     @Override
