@@ -16,15 +16,21 @@ import static android.R.attr.key;
 public class FirebaseDbUtil {
 
     private static final String FIREBASE_REF_NAME = "cards";
-    private static DatabaseReference dbRef = null;
+    private static FirebaseDatabase dbRef = null;
 
-    private static FirebaseDatabase getDbRef() {
-        FirebaseDatabase fdb = FirebaseDatabase.getInstance();
-        return fdb;
+    private static FirebaseDatabase getDbRef(String email) {
+
+        if (dbRef == null) {
+            FirebaseDatabase fdb = FirebaseDatabase.getInstance();
+            fdb.setPersistenceEnabled(true);
+            fdb.getReference(email).keepSynced(true);
+            dbRef = fdb;
+        }
+        return dbRef;
     }
 
     public static DatabaseReference getFirebaseDbReference(String userEmail) {
-        return FirebaseDatabase.getInstance().getReference(userEmail);
+        return getDbRef(userEmail).getReference(userEmail);
     }
 
     public static void goOffline() {
